@@ -1,20 +1,21 @@
 # https://stackoverflow.com/questions/49466785/kivy-error-python-2-7-sdl2-import-error
-import kivy
+
+# C:\Users\Bhumika\Documents\Coding Projects\expenditure-capture\data\jan-feb-2018.xlsx
+
+import os
+
+from kivy.app import App
+from kivy.factory import Factory
+from kivy.properties import ObjectProperty
 from kivy.properties import StringProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.recycleview import RecycleView
-from kivy.factory import Factory
-from kivy.properties import ObjectProperty
 from kivy.uix.popup import Popup
+from kivy.uix.recycleview import RecycleView
 
-import os
-from model import *
+from model import Model
 
-# kivy.require('1.9.0')
-
-from kivy.app import App
-
+model = Model()
 
 class LoadDialog(FloatLayout):
     load = ObjectProperty(None)
@@ -45,7 +46,8 @@ class Root(FloatLayout):
     def load(self, path, filename):
         try:
             self.transactions_filepath.text = os.path.join(path, filename[0])
-
+            model.process_transactions_file(self.transactions_filepath.text)  # create dataframe with transaction details
+            
             self.dismiss_popup()
 
 

@@ -1,7 +1,8 @@
-import xlwings as xw
-import pandas as pd
 import csv
 import os.path
+
+import pandas as pd
+import xlwings as xw
 
 path = r'..\data\jan-feb-2018.xlsx'
 category_path = r'..\data\category-mappings.csv'
@@ -57,11 +58,14 @@ class Model:
         return wb
 
     def process_transactions_file(self, filepath: str):
+        # todo: deal with exception when incorrect file
         trans_wb = self.load_excel(filepath)
         sheet = trans_wb.sheets[0]
         self.create_transactions_mapping(sheet)
         transactions = pd.DataFrame(self.transaction_mappings).T
         self.transactions_df = transactions
+
+        self.add_inital_category_mappings()
 
     def create_transactions_mapping(self, sheet):
         # sht.range('A1:A5').options(ndim=2).value # row
@@ -103,7 +107,7 @@ class Model:
             if desp in description:
                 return cat
 
-    def update_category_mappings(self):
+    def add_inital_category_mappings(self):
         for row in self.transactions_df.itertuples():
             row_desp = getattr(row, DESCRIPTION)
             category = self.get_description_cat(row_desp)
