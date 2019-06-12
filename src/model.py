@@ -43,11 +43,11 @@ class Model:
 
         if os.path.isfile(category_path):
             try:
-                reader = csv.DictReader(category_path)
-                for row in reader:
-                    print(row)
-                    key = row[DESCRIPTION]
-                    cat_map[key] = row[CATEGORY]
+                with open(category_path, mode='r') as csv_file:
+                    reader = csv.DictReader(csv_file)
+                    for row in reader:
+                        key = row[DESCRIPTION]
+                        cat_map[key] = row[CATEGORY]
             except KeyError:
                 print("Category map file found, but incorrect format")
         return cat_map
