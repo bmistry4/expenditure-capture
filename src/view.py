@@ -46,21 +46,20 @@ class Root(FloatLayout):
     def load(self, path, filename):
         try:
             self.transactions_filepath.text = os.path.join(path, filename[0])
-            model.process_transactions_file(self.transactions_filepath.text)  # create dataframe with transaction details
-            
+            model.process_transactions_file(
+                self.transactions_filepath.text)  # create dataframe with transaction details
+
             self.dismiss_popup()
 
 
         except IndexError:
             pass
 
-
     def show_load(self):
         content = LoadDialog(load=self.load, cancel=self.dismiss_popup)
         self._popup = Popup(title="Load file", content=content,
                             size_hint=(0.9, 0.9))
         self._popup.open()
-
 
 
 class ViewApp(App):
