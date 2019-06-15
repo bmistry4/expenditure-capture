@@ -8,12 +8,11 @@ from kivy.properties import ObjectProperty
 from kivy.uix.floatlayout import FloatLayout
 
 from model import Model
-from table import Table
 
 Config.set("input", "mouse", "mouse, disable_multitouch")
 from kivy.app import App
 from kivy.core.window import Window
-from examples.table.table import Table
+from src.table import Table
 
 model = Model()
 
