@@ -3,14 +3,16 @@ import os.path
 
 import pandas as pd
 import xlwings as xw
+from kivy.uix.spinner import Spinner
+from kivy.uix.textinput import TextInput
 
-path = r'..\data\jan-feb-2018.xlsx'
+transactions_path = r'..\data\jan-feb-2018.xlsx'
 category_path = r'..\data\category-mappings.csv'
 sheet = 'transactions'
 DATE = 'date'
 DESCRIPTION = 'description'
-MONEY_IN = 'money in'
-MONEY_OUT = 'money out'
+MONEY_IN = 'money_in'
+MONEY_OUT = 'money_out'
 BALANCE = 'balance'
 CATEGORY = 'category'
 
@@ -148,7 +150,29 @@ class Model:
         # update budget stuff on right
         pass
 
+    def add_transactions_rows(self, table):
+        for row in self.transactions_df.itertuples():
+            # only account for costings, not savings
+            if getattr(row, MONEY_OUT) is not None:
+                desp = getattr(row, DESCRIPTION)
+                cat = getattr(row, CATEGORY)
+                if cat is None:
+                    spinner_text = 'Please select...'
+                    desp_cell_color = [1, 0, 0, 0.5]
+                else:
+                    spinner_text = cat
+                    desp_cell_color = [0, 1, 0, 0.2]
+
+                table.add_row([TextInput, {'text': desp,
+                                           'color_widget': desp_cell_color,
+                                           # 'color_click': [0.2, 0.3, 0.5, 0.5]
+                                           }],
+                              [Spinner, {'text': spinner_text,
+                                         # 'color_click': [0.23, 0.24, .5, 1],
+                                         'values': CATEGORY_LIST,
+                                         }])
+
 
 if __name__ == '__main__':
     model = Model()
-    model.process_transactions_file(path)
+    model.process_transactions_file(transactions_path)
