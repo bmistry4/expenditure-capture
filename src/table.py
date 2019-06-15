@@ -1,15 +1,15 @@
 # Table module
 # Copyright (C) 2014 Musikhin Andrey <melomansegfault@gmail.com>
 
+from os.path import join, dirname, abspath
+
 import kivy
-from kivy.lang import Builder
 from kivy.graphics import Color, Rectangle
+from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.scrollview import ScrollView
-from kivy.uix.button import Button
-from kivy.uix.label import Label
-from os.path import join, dirname, abspath
 
 Builder.load_file(join(dirname(abspath(__file__)), 'table.kv'))
 
@@ -91,8 +91,8 @@ class Table(BoxLayout):
                 text=str(self.row_count)))
         else:
             print(
-            'ERROR: Please, add %s strings in method\'s arguments' % \
-            str(self._cols))
+                'ERROR: Please, add %s strings in method\'s arguments' % \
+                str(self._cols))
 
     def add_row(self, *args):
         """
@@ -104,6 +104,10 @@ class Table(BoxLayout):
             for num, item in enumerate(args):
                 Cell = type('Cell', (NewCell, item[0]), {})
                 cell = Cell()
+                setattr(cell, 'widget_type', item[0])  # set the type of widget the cell is (i.e. Spinner/ TextInput)
+                # attribute on spinner's current value
+                if item[0] is kivy.uix.spinner.Spinner:
+                    setattr(cell, 'current_spinner_selection', None)
                 for key in item[1].keys():
                     setattr(cell, key, item[1][key])
                 self.grid.add_widget(cell)
@@ -118,7 +122,7 @@ class Table(BoxLayout):
                 self.choose_row(0)
         else:
             print('ERROR: Please, add %s strings in method\'s arguments' % \
-            str(self._cols))
+                  str(self._cols))
 
     def del_row(self, number):
         """ Delete a row by number """
@@ -132,7 +136,7 @@ class Table(BoxLayout):
                 self.choose_row(number)
         else:
             print(
-            'ERROR: Nothing to delete...')
+                'ERROR: Nothing to delete...')
 
     def choose_row(self, row_num=0):
         """
@@ -473,7 +477,7 @@ class GridTable(GridLayout):
                 columns = self.parent.parent.parent._cols
                 row_index = index / columns
                 print(
-                str(row_index), 'row is chosen')
+                    str(row_index), 'row is chosen')
                 return row_index
                 break
 
@@ -493,6 +497,7 @@ class NewCell(object):
         super(NewCell, self).__init__(**kwargs)
         self.bind(size=self._redraw_widget)
         self.bind(on_press=self._on_press_button)
+        # self.bind(on_release=self._on_release_spinner)
         try:
             self.bind(focus=self._on_press_button)
         except:
@@ -528,11 +533,24 @@ class NewCell(object):
         self.parent.current_cell = args[0]
         self.state = 'normal'
         print(
-        'pressed on grid item')
+            'pressed on grid item')
         self.main_table = self.parent.parent.parent.parent
         self.grid = self.parent
         # self.color = self._color
         self.main_table.choose_row(self.grid._get_row_index(self))
+
+        if self.widget_type is kivy.uix.spinner.Spinner:
+            self.current_spinner_selection = self.text
+
+    # def _on_release_spinner(self, *args):
+    #     if self.widget_type is kivy.uix.spinner.Spinner:
+    #         print(self.text)
+
+    def _on_spinner_select(self, *args):
+        if self.widget_type is kivy.uix.spinner.Spinner:
+            if self.current_spinner_selection is not None:
+                if self.current_spinner_selection != self.text:
+                    self.color_widget = [.5, .5, 0, 1]
 
     def _redraw_widget(self, *args):
         """ Method of redraw this widget """
@@ -558,12 +576,13 @@ class NewLabel(Button):
         # Disable a click
         self.state = 'normal'
         print(
-        'pressed on name label')
+            'pressed on name label')
 
 
 class NullLabel(Button):
     """Num Label object class"""
     _color = [.2, .2, .2, 1]
+
     def __init__(self, **kwargs):
         super(NullLabel, self).__init__(**kwargs)
         self.bind(size=self._redraw_widget)
