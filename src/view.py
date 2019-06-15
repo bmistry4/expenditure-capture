@@ -1,51 +1,25 @@
 # https://stackoverflow.com/questions/49466785/kivy-error-python-2-7-sdl2-import-error
 
-# C:\Users\Bhumika\Documents\Coding Projects\expenditure-capture\data\jan-feb-2018.xlsx
-
 import os
 
-from kivy.app import App
+from kivy.config import Config
 from kivy.factory import Factory
 from kivy.properties import ObjectProperty
-from kivy.properties import StringProperty
-from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.popup import Popup
-from kivy.uix.recycleview import RecycleView
 
 from model import Model
 from table import Table
 
-from kivy.config import Config
-
 Config.set("input", "mouse", "mouse, disable_multitouch")
 from kivy.app import App
 from kivy.core.window import Window
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.textinput import TextInput
 from examples.table.table import Table
-from kivy.uix.spinner import Spinner
 
 model = Model()
 
 class LoadDialog(FloatLayout):
     load = ObjectProperty(None)
     cancel = ObjectProperty(None)
-
-
-# class RecycleViewRow(BoxLayout):
-#     text = StringProperty()
-#
-#
-# class TransactionsTable(RecycleView):
-#     def __init__(self, **kwargs):
-#         super(TransactionsTable, self).__init__(**kwargs)
-#         self.data = [
-#             {'text': "Button " + str(x),
-#              'id': str(x)}
-#             for x in range(5)
-#         ]
-
 
 class Root(FloatLayout):
     loadfile = ObjectProperty(None)
@@ -112,13 +86,6 @@ class Root(FloatLayout):
         if keycode[0] == 279:  # End
             print(keycode)
             self.my_table.scroll_view.end()
-
-    def on_click(self):
-        self.my_table.grid.cells[1][0].color_widget = [1, 0, 1, 0.6]
-        for row in self.my_table.grid._cells:
-            print(row[0].text, row[1].text)
-
-
 
 class ViewApp(App):
     title = "Expenditure capture"
