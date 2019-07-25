@@ -1,5 +1,6 @@
 #:kivy 1.1.0
 #:import Factory kivy.factory.Factory
+#:import Table src.table
 
 #:set color_button (0.784, 0.443, 0.216, 1)  # brown
 #:set color_button_pressed (0.659, 0.522, 0.431, 1)  # darker brown
@@ -51,8 +52,9 @@
                 text: "Load"
                 on_release: root.load(filechooser.path, filechooser.selection)
 
+
 <Root>: # no <> means it's been instantiated
-    transactions_filepath: transactions_filepath
+#    transactions_filepath: transactions_filepath
     BoxLayout:
         orientation: 'vertical'
         padding: 10
@@ -61,17 +63,20 @@
             padding:5
             size_hint: 1.,.2
             orientation: 'horizontal'
-            TextInput:
-                id: transactions_filepath
-                text:'file'
+#            TextInput:
+#                id: transactions_filepath
+#                text:'file'
+#            Button:
+#                color: 'blue'
+#                text: 'Browse...'
+#                on_release: root.load_table()
             Button:
-                text: 'Browse...'
-                on_release: root.show_load()
+#                size_hint_y: 0.1
+                text: 'DO THE THING'
+                on_release: root.update_budget()
 
-        TextInput:
-            text: 'search...'
-            size_hint: 0.95,0.1
+#        TextInput:
+#            text: 'search...'
+#            size_hint: 0.95,0.1
 #        TransactionsTable:
-        Button:
-            size_hint_y: 0.2
-            text: 'DO THE THING'
+
